@@ -60,7 +60,7 @@ class SideBarWidget {
       header: Container(
         height: 50,
         width: double.infinity,
-        color: Colors.black26,
+        color: Colors.black,
         child: Center(
           child: Text(
             'Menu',

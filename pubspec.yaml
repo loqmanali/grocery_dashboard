@@ -31,8 +31,11 @@ dependencies:
   firebase_core: ^0.5.3
   cloud_firestore: ^0.14.4
   firebase_auth: ^0.18.4+1
+  firebase: ^8.0.0
+  firebase_storage: ^5.2.0
   ars_progress_dialog: ^0.1.2
   flutter_admin_scaffold: ^0.0.5
+  flutter_bloc:
 
 dev_dependencies:
   flutter_test:
