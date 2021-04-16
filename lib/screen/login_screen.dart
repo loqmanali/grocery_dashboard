@@ -4,10 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_dashboard/componant/custom_text.dart';
 import 'package:grocery_dashboard/componant/custom_text_field.dart';
-import 'package:grocery_dashboard/screen/home_screen.dart';
 import 'package:grocery_dashboard/services/firebase_services.dart';
 
 import '../app_routes.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -18,48 +18,60 @@ class _LoginScreenState extends State<LoginScreen> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   final _formKey = GlobalKey<FormState>();
   FirebaseServices _services = FirebaseServices();
-  String username;
-  String password;
+  final _usernameTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     ArsProgressDialog progressDialog = ArsProgressDialog(
       context,
       blur: 2.0,
-      backgroundColor: Color(0x3300000),
+      backgroundColor: Color(0xff84c225).withOpacity(0.9),
       animationDuration: Duration(milliseconds: 500),
     );
 
-    Future<void> _login() async {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInAnonymously();
+    _login({username, password}) async {
       progressDialog.show();
-      _services.getAdminCredentials().then((value) {
-        value.docs.forEach((doc) {
-          if (doc.get('username') == username) {
-            if (doc.get('password') == password) {
-              progressDialog.dismiss();
-              if (userCredential.user.uid != null) {
-                AppNavigator.navigatorTo(context, false, HomeScreen());
-                return;
-              } else {
-                _showMyDialog(title: 'Login', message: 'Login Failed');
+      _services.getAdminCredentials(username).then((value) async {
+        if (value.exists) {
+          if (value.data()['username'] == username) {
+            if (value.data()['password'] == password) {
+              /// if both is correct, will login
+              try {
+                UserCredential userCredential =
+                    await FirebaseAuth.instance.signInAnonymously();
+                if (userCredential.user.uid != null) {
+                  progressDialog.dismiss();
+                  AppNavigator.navigatorTo(context, false, HomeScreen());
+                  // return;
+                }
+              } catch (e) {
+                _showMyDialog(title: 'Login', message: e.toString());
               }
-            } else {
-              progressDialog.dismiss();
-              _showMyDialog(
-                title: 'Invalid Password',
-                message: 'Please Try again',
-              );
+              return;
             }
-          } else {
+
+            /// if password incorrect
             progressDialog.dismiss();
             _showMyDialog(
-              title: 'Invalid UserName',
+              title: 'Invalid Password',
               message: 'Please Try again',
             );
+            return;
           }
-        });
+
+          /// if username incorrect
+          progressDialog.dismiss();
+          _showMyDialog(
+            title: 'Invalid Username',
+            message: 'Please Try again',
+          );
+        }
+        progressDialog.dismiss();
+        _showMyDialog(
+          title: 'Invalid Username',
+          message: 'Please Try again',
+        );
       });
     }
 
@@ -114,19 +126,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 children: [
                                   CustomTextField(
+                                    controller: _usernameTextController,
                                     prefixIcon: Icon(Icons.person_rounded),
                                     hintText: 'User Name',
                                     validator: (value) {
                                       if (value.isEmpty) {
                                         return 'Enter User name';
                                       }
-                                      setState(() {
-                                        username = value;
-                                      });
                                       return null;
                                     },
                                   ),
                                   CustomTextField(
+                                    controller: _passwordTextController,
                                     prefixIcon: Icon(Icons.vpn_key),
                                     hintText: 'Password',
                                     obscureText: true,
@@ -134,9 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       if (value.length < 6) {
                                         return 'Minimum 6 char';
                                       }
-                                      setState(() {
-                                        password = value;
-                                      });
                                       return null;
                                     },
                                   ),
@@ -151,7 +159,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                         primary: Colors.green),
                                     onPressed: () {
                                       if (_formKey.currentState.validate()) {
-                                        _login();
+                                        _login(
+                                          username:
+                                              _usernameTextController.text,
+                                          password:
+                                              _passwordTextController.text,
+                                        );
                                       }
                                     },
                                     child: Text('Login'),
@@ -187,7 +200,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: ListBody(
               children: <Widget>[
                 Text(message),
-                Text('Please Try again'),
               ],
             ),
           ),
