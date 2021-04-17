@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xff84c225),
       ),
-      initialRoute: Routes.banner,
+      initialRoute: Routes.vendor,
       onGenerateRoute: RouteApp.generateRoute,
     );
   }

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
-import 'package:grocery_dashboard/componant/banner_upload_widget.dart';
-import 'package:grocery_dashboard/componant/banner_widget.dart';
+import 'package:grocery_dashboard/componant/vendor_data_table.dart';
+import 'package:grocery_dashboard/componant/vendor_filter.dart';
 import 'package:grocery_dashboard/services/sidebar.dart';
 
 import '../app_routes.dart';
 
-class BannerScreen extends StatelessWidget {
+class VendorScreen extends StatelessWidget {
   final SideBarWidget _sideBar = SideBarWidget();
-
   @override
   Widget build(BuildContext context) {
     return AdminScaffold(
@@ -21,7 +20,7 @@ class BannerScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      sideBar: _sideBar.sideBarMenu(context, Routes.banner),
+      sideBar: _sideBar.sideBarMenu(context, Routes.orders),
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.topLeft,
@@ -30,17 +29,23 @@ class BannerScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Banners',
+                'Manage Vendor',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 36,
                 ),
               ),
-              Text('Add / Delete Home Screen Banner Images'),
+              SizedBox(height: 10.0),
+              Text(
+                'Manage all the Vendor activites',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               Divider(thickness: 5.0),
-              BannerWidget(),
+              VendorFilter(),
               Divider(thickness: 5.0),
-              BannerUploadWidget(),
+              VendorDataTable(),
             ],
           ),
         ),

@@ -8,6 +8,7 @@ import 'package:grocery_dashboard/screen/setting_screen.dart';
 import 'screen/banner_screen.dart';
 import 'screen/home_screen.dart';
 import 'screen/login_screen.dart';
+import 'screen/vendor_screen.dart';
 
 class RouteApp {
   static MaterialPageRoute generateRoute(RouteSettings settings) {
@@ -28,6 +29,8 @@ class RouteApp {
         return MaterialPageRoute(builder: (context) => AdminUsersScreen());
       case Routes.setting:
         return MaterialPageRoute(builder: (context) => SettingScreen());
+      case Routes.vendor:
+        return MaterialPageRoute(builder: (context) => VendorScreen());
       default:
         return null;
     }
@@ -42,7 +45,8 @@ class Routes {
   static const String orders = 'orders';
   static const String notifications = 'notifications';
   static const String adminUsers = 'adminUsers';
-  static const String setting = 'Setting';
+  static const String setting = 'setting';
+  static const String vendor = 'vendor';
 }
 
 class AppNavigator {

@@ -23,6 +23,11 @@ class SideBarWidget {
           icon: CupertinoIcons.photo_fill_on_rectangle_fill,
         ),
         MenuItem(
+          title: 'Vendor',
+          route: Routes.vendor,
+          icon: CupertinoIcons.group_solid,
+        ),
+        MenuItem(
           title: 'Category',
           route: Routes.category,
           icon: Icons.category_rounded,
